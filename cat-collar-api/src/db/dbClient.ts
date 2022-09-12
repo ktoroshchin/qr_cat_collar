@@ -1,11 +1,19 @@
 const { Pool } = require('pg')
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || ''
-})
+class Database {
+  private _pool: any
 
-pool.connect()
-  .then(() => console.log('connected to db'))
-  .catch((err: any) => console.error('Error connecting to Postgres db', err.stack))
+  constructor() {
+    this._pool = new Pool({
+      connectionString: process.env.DATABASE_URL || ''
+    })
+  }
 
-export { pool }
+  public connect(): void {
+    this._pool.connect()
+      .then(() => console.log('connected to db'))
+      .catch((err: any) => console.error('Error connecting to Postgres db', err.stack))
+  }
+}
+
+export const database = new Database()
