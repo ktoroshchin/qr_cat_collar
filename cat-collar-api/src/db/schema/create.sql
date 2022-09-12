@@ -51,9 +51,3 @@ CREATE TABLE photo_urls(
   path TEXT NOT NULL,
   pet_id UUID NOT NULL REFERENCES pets(id) ON DELETE CASCADE
 );
-
-
-
-
-  
- 
