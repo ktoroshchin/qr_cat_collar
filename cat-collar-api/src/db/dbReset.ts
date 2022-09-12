@@ -1,6 +1,6 @@
 import { ENV, ROOT } from '../environments'
 require('dotenv').config({ path: `${ROOT}/../.env.${ENV}` })
-import { pool } from './dbClient'
+import { database } from './dbClient'
 import fs from 'fs'
 
 function read(file: string): Promise<string> {
@@ -31,4 +31,4 @@ function read(file: string): Promise<string> {
             process.exit()
         }
     }
-})(pool)
+})(database)
