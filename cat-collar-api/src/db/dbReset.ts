@@ -1,6 +1,7 @@
 import { ENV, ROOT } from '../environments'
-require('dotenv').config({ path: `${ROOT}/../.env.${ENV}` })
-import { database } from './dbClient'
+import dotenv from 'dotenv'
+dotenv.config({ path: `${ROOT}/../.env.${ENV}` })
+import { IDatabase, database } from './dbClient'
 import fs from 'fs'
 
 function read(file: string): Promise<string> {
@@ -12,9 +13,9 @@ function read(file: string): Promise<string> {
     })
 }
 
-(async function reset(db: any): Promise<void> {
+(async function reset(database: IDatabase): Promise<void> {
     if (ENV === 'development' || ENV === 'test') {
-
+        const db = await database.connect()
         try {
             const [create, seed] = await Promise.all([
                 read(__dirname + '/schema/create.sql'),
@@ -27,7 +28,7 @@ function read(file: string): Promise<string> {
         } catch (error) {
             console.error(error)
         } finally {
-            db.end()
+            db.release()
             process.exit()
         }
     }
