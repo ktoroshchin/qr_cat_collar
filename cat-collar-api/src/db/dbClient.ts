@@ -1,19 +1,32 @@
-const { Pool } = require('pg')
+import pg from "pg"
 
-class Database {
-  private _pool: any
+interface IDatabase {
+  connect(): Promise<pg.PoolClient>,
+}
+
+class Database implements IDatabase {
+  private _pool: pg.Pool
 
   constructor() {
-    this._pool = new Pool({
+    this._pool = new pg.Pool({
       connectionString: process.env.DATABASE_URL || ''
     })
   }
 
-  public connect(): void {
-    this._pool.connect()
-      .then(() => console.log('connected to db'))
-      .catch((err: any) => console.error('Error connecting to Postgres db', err.stack))
+  public async connect(): Promise<pg.PoolClient> {
+    try {
+      const client = this._pool.connect()
+      console.log('Connected to DB')
+      return client
+    } catch (err) {
+      return Promise.reject(err)
+    }
   }
 }
 
-export const database = new Database()
+const database = new Database()
+
+export {
+  database,
+  IDatabase
+}  

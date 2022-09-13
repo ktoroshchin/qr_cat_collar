@@ -1,11 +1,11 @@
 import express from 'express'
+import pg from 'pg'
+
 const app = express()
 
-function application(env: any, db: any): express.Application {
-   
+function application(env: string, db: pg.PoolClient): express.Application {
     app.get('/', async (req, res) => {
-        const data = await db.query("SELECT * FROM owner_information WHERE id='6774657c-68d0-4b82-98bf-2985b25b7dd3' ")
-
+        const data: pg.QueryResult = await db.query("SELECT * FROM owner_information;")
         res.json({ user: data.rows })
         res.end()
     })
